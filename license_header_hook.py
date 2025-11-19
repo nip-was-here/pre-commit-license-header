@@ -112,8 +112,9 @@ class LicenseHeaderManager:
         else:
             # Multi-line comment style (e.g., /* */ for C/Java)
             result = [comment_style["start"]]
+            gap = ' ' if comment_style["middle"] != '' else ''
             for line in lines:
-                result.append(f"{comment_style['middle']} {line}".rstrip())
+                result.append(f"{comment_style['middle']}{gap}{line}".rstrip())
             result.append(comment_style["end"])
             return "\n".join(result)
 
