@@ -52,6 +52,11 @@ class CommentRegistry:
         ".vhd": {"start": "/*", "middle": "", "end": "*/"},
         ".v": {"start": "//", "middle": "//", "end": "//"},
         ".sv": {"start": "//", "middle": "//", "end": "//"},
+        # MarkDown
+        ".md": {"start": "<!--", "middle": "", "end": "-->"},
+        # HashiCorp
+        ".hcl": {"start": "#", "middle": "#", "end": "#"},
+        ".tf": {"start": "#", "middle": "#", "end": "#"},
     }
 
     def __init__(self, custom_mappings: dict | None = None):
@@ -178,7 +183,7 @@ class LicenseHeaderManager:
             for line in lines:
                 stripped = line.strip()
                 if stripped.startswith(comment_style["start"]):
-                    content = stripped[len(comment_style["start"]) :].strip()
+                    content = stripped[len(comment_style["start"]):].strip()
                     content_lines.append(content)
         else:
             # Multi-line comments - remove comment markers
@@ -186,7 +191,7 @@ class LicenseHeaderManager:
                 stripped = line.strip()
                 if i == 0 and stripped.startswith(comment_style["start"]):
                     # First line with start marker
-                    content = stripped[len(comment_style["start"]) :].strip()
+                    content = stripped[len(comment_style["start"]):].strip()
                     if content:
                         content_lines.append(content)
                 elif stripped.endswith(comment_style["end"]):
@@ -194,14 +199,15 @@ class LicenseHeaderManager:
                     content = stripped[: -len(comment_style["end"])].strip()
                     if content.startswith(comment_style["middle"].strip()):
                         content = content[
-                            len(comment_style["middle"].strip()) :
+                            len(comment_style["middle"].strip()):
                         ].strip()
                     if content:
                         content_lines.append(content)
                     break
                 elif stripped.startswith(comment_style["middle"].strip()):
                     # Middle line
-                    content = stripped[len(comment_style["middle"].strip()) :].strip()
+                    content = stripped[len(
+                        comment_style["middle"].strip()):].strip()
                     content_lines.append(content)
 
         return "\n".join(content_lines)
@@ -211,7 +217,8 @@ class LicenseHeaderManager:
     ) -> str:
         """Remove existing license header from file content."""
         # First, check if there's actually a header to remove
-        existing_header = self.extract_existing_header(file_content, comment_style)
+        existing_header = self.extract_existing_header(
+            file_content, comment_style)
         if not existing_header:
             return file_content
 
@@ -285,7 +292,8 @@ class LicenseHeaderManager:
         # Load and format template
         template = self.load_template()
         formatted_template = self.format_template(template)
-        new_header = self.create_header_comment(formatted_template, comment_style)
+        new_header = self.create_header_comment(
+            formatted_template, comment_style)
 
         # TODO: Add optimization to check if existing header is already correct
 
@@ -302,7 +310,8 @@ class LicenseHeaderManager:
             shebang = lines[0]
             remaining_content = content_without_header
             if remaining_content.startswith(shebang):
-                remaining_content = remaining_content[len(shebang) :].lstrip("\n")
+                remaining_content = remaining_content[len(
+                    shebang):].lstrip("\n")
 
             remaining_content = remaining_content.lstrip("\n")
             if remaining_content:
@@ -354,7 +363,8 @@ def should_process_file(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Pre-commit hook for license headers")
+    parser = argparse.ArgumentParser(
+        description="Pre-commit hook for license headers")
     parser.add_argument("files", nargs="*", help="Files to process")
     parser.add_argument(
         "--template", "-t", required=True, help="License header template file"
