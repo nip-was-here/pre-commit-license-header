@@ -31,6 +31,8 @@ class CommentRegistry:
         ".cc": {"start": "/*", "middle": " *", "end": " */"},
         ".h": {"start": "/*", "middle": " *", "end": " */"},
         ".hpp": {"start": "/*", "middle": " *", "end": " */"},
+        # Lua
+        ".lua": {"start": "--", "middle": "--", "end": "--"},
         # Shell scripts
         ".sh": {"start": "#", "middle": "#", "end": "#"},
         ".bash": {"start": "#", "middle": "#", "end": "#"},
